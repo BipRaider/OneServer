@@ -1,0 +1,29 @@
+{
+   "overrides": [
+       {
+           "files": ["*.md"],
+           "processor": "a-plugin/markdown"
+       },
+       {
+           "files": ["**/*.md/*.js"],
+           "rules": {
+               "strict": "off"
+           }
+       }
+   ],
+   "extends": [
+    "react-app",
+    "prettier"
+  ],
+  "rules": {
+    "jsx-quotes": [
+      1,
+      "prefer-double"
+    ]
+  },
+  "plugins": [
+    "prettier",
+    "a-plugin"
+  ]
+  
+ }
