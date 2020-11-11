@@ -29,9 +29,9 @@
     "prettier": "^2.1.2"
   },
   "scripts": {
-    "start": "node api/server.js",
-    "dev": "nodemon --inspect ./index.js run localhost 3000",
-    "lint": "eslint ./src/*",
+    "start": "node api/start.js",
+    "dev": "nodemon --inspect api/start.js run localhost 3000",
+    "lint": "eslint ./api/*",
     "test": "echo \"Error: no test specified\" && exit 1",
     "precommit": "lint-staged",
     "eslint": "node_modules/.bin/eslint src/"

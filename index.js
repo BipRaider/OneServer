@@ -1,59 +1,34 @@
-// const fetch = require('node-fetch');
-// const express = require('express');
-// const Joi = require('joi');
-// const cors = require('cors');
-// const app = express();
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+dotenv.config();
 
-// const dotenv = require('dotenv');
-// dotenv.config();
+const { PORT, _PORT } = process.env;
 
-// const WEATHER = '/weather';
-// const WEATHER_URL = 'https://api.darksky.net/forecast/';
-// const { _DARK_KEY } = process.env;
-// const PORT = process.env.PORT || 3000;
+module.exports = class UserServer {
+   constructor() {
+      this.server = null;
+   }
 
-// app.use(express.json());
+   start() {
+      this.initServer();
+      this.initMiddlewares();
+      this.initRoutes();
+      this.serverListening();
+   }
 
-// app.use(
-//    cors({
-//       origin: `http://localhost:${PORT}`,
-//    }),
-// );
+   initServer() {
+      this.server = express();
+   }
+   initMiddlewares() {
+      this.server.use(express.json());
+      this.server.use(cors({ origin: `http://localhost:${PORT}` }));
+   }
+   initRoutes() {}
 
-// app.get(WEATHER, validationWeatherQuery, getWeather);
-
-// async function getWeather(req, res, next) {
-//    try {
-//       const { lat, lon } = await req.query;
-//       const weatherRes = await fetch(
-//          `${WEATHER_URL}${_DARK_KEY}/${lat},${lon}?exclude=hourly,daily,minutely`,
-//       );
-//       const responseBody = await weatherRes.json();
-
-//       if (responseBody.error) res.status(responseBody.code).send(responseBody.error);
-
-//       return res.status(200).json(responseBody);
-//    } catch (error) {
-//       console.log('error >>>', error);
-//    }
-// }
-
-// function validationWeatherQuery(req, res, next) {
-//    const weatherRules = Joi.object({
-//       lat: Joi.string().required(),
-//       lon: Joi.string().required(),
-//    });
-
-//    const validation = weatherRules.validate(req.query);
-
-//    if (validation.error) {
-//       res.status(400).send(validation.error);
-//       return;
-//    }
-
-//    next();
-// }
-
-// app.listen(PORT, () => {
-//    console.log('Listing ... >>', PORT);
-// });
+   serverListening() {
+      this.server.listen(PORT || _PORT, () => {
+         console.log('Server started listening on port...', PORT || _PORT);
+      });
+   }
+};
