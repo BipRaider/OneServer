@@ -1,50 +1,14 @@
 [
  {
-  "name": "asd123",
-  "email": "sdfsdf",
-  "password": "sdfsdf",
-  "id": 2
- },
- {
   "name": "Vaasdsy",
-  "email": "00sad",
-  "password": "00asd",
+  "email": "00sasdasdad",
+  "password": "00asdw",
   "id": 1
  },
  {
   "name": "asd123",
   "email": "sdfsdf",
   "password": "sdfsdf",
-  "id": 3
- },
- {
-  "name": "000",
-  "email": "00",
-  "password": "00",
-  "id": 4
- },
- {
-  "name": "asd123",
-  "email": "sdfsdf",
-  "password": "sdfsdf",
-  "id": 5
- },
- {
-  "name": "asd123",
-  "email": "sdfsdf",
-  "password": "sdfsdf",
-  "id": 8
- },
- {
-  "name": "asd123",
-  "email": "sdfsdf",
-  "password": "sdfsdf",
-  "id": 9
- },
- {
-  "name": "Vaasdsy",
-  "email": "00",
-  "password": "00",
-  "id": 10
+  "id": 2
  }
 ]

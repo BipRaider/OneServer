@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const userList = require('../controllers/usersListesURN');
+const userList = require('./usersListesURN');
 const UserController = require('../controllers/UserController');
 
 //Ендпоинт (англ. Endpoint) - это, по-факту, уникальная для вашего сервера комбинация URI i HTTP метода

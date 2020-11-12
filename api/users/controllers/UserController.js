@@ -24,6 +24,7 @@ class UserController {
          return await res.json(users);
       } catch (error) {
          console.error(new Error('Users not found'));
+         next(error);
       }
    }
 
@@ -53,7 +54,7 @@ class UserController {
          // вытаскиваем данные из  users/id
          const targetUserIndex = await this.findUserIndexByID(res, req.params.id);
 
-         if (targetUserIndex === undefined) return;
+         // if (targetUserIndex === undefined) return; // можно удалять так как у нас в findUserIndexByID  есть class для про верки NotFoundError
 
          users[targetUserIndex] = {
             ...users[targetUserIndex],
@@ -89,11 +90,8 @@ class UserController {
    async _deleteUser(req, res, next) {
       try {
          const targetUserIndex = await this.findUserIndexByID(res, req.params.id);
-
-         if (targetUserIndex === undefined) return;
-
-         await users.splice(targetUserIndex, 1);
-
+         // if (targetUserIndex === undefined) return; // можно удалять так как у нас в findUserIndexByID  есть class для про верки NotFoundError
+         await users.splice(targetUserIndex, 1); // удаляем из объекта массив с пользователем  по index
          // преобразуем файл JSON формат
          const addUser = await JSON.stringify(users, null, 1);
          //Записываем нового юзера в file users.json
@@ -120,7 +118,8 @@ class UserController {
       const targetUserIndex = users.findIndex(user => user.id === id);
       // если пользователь не найден выводим ошибку и статус код 404
       if (targetUserIndex === -1) {
-         res.status(404).send('User does not exist');
+         throw new NotFoundError('User not found...');
+         // res.status(404).send('User does not exist');
          return;
       }
       return targetUserIndex;
@@ -136,7 +135,7 @@ class UserController {
       const validated = userTemple.validate(req.body);
 
       if (validated.error) {
-         res.status(400).send(validated.error);
+         res.status(404).send(validated.error);
          return;
       }
 
@@ -150,13 +149,25 @@ class UserController {
          password: Joi.string(),
       });
 
-      const validated = userTemple.validate(req.body);
+      const validated = updateUserRules.validate(req.body);
+
       if (validated.error) {
-         res.status(400).send(validated.error);
+         res.status(404).send(validated.error);
          return;
       }
 
       next();
+   }
+}
+
+// создаём класс для вывода ошибок и скрытия stackTheist error   в консоли  и браузере
+//  и  теперь не требуется делать проверку на // if (targetUserIndex === undefined) return;
+class NotFoundError extends Error {
+   constructor(message) {
+      super(message);
+
+      this.status = 404;
+      delete this.stack; // удаляем stackTheist error  чтобы не знали детали реализаций нашего сервера
    }
 }
 

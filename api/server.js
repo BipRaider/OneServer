@@ -6,6 +6,8 @@ dotenv.config();
 
 const { userRouter } = require('./users/routes/users.router');
 
+const { weatherRouter } = require('./weather/routes/weather.router');
+
 const { PORT, _PORT } = process.env;
 
 module.exports = class Server {
@@ -29,6 +31,7 @@ module.exports = class Server {
    }
    initRoutes() {
       this.server.use('/users', userRouter);
+      this.server.use('/weather', weatherRouter);
    }
 
    serverListening() {

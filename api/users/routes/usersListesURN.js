@@ -1,4 +1,4 @@
-const UserController = require('./UserController');
+const UserController = require('../controllers/UserController');
 //CRUD
 const userList = [
    {
