@@ -16,6 +16,7 @@ class WeatherController {
          const weatherRes = await fetch(
             `${WEATHER_URL}${_DARK_KEY}/${lat},${lon}?exclude=hourly,daily,minutely`,
          );
+
          const responseBody = await weatherRes.json();
          if (responseBody.error) res.status(responseBody.code).send(responseBody.error);
 
@@ -26,6 +27,8 @@ class WeatherController {
    }
 
    validationWeatherQuery(req, res, next) {
+      if (req.query.lat === undefined || req.query.lon === undefined) return res.send();
+
       const weatherRules = Joi.object({
          lat: Joi.string().required(),
          lon: Joi.string().required(),
