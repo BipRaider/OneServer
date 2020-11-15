@@ -5,7 +5,7 @@ class ApiController {
    //GET
    async _getApi(req, res, next) {
       try {
-         return await res.status(200).json({
+         return await res.send({
             query: {
                users: {
                   get: '/users',
