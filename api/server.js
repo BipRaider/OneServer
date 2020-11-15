@@ -1,11 +1,25 @@
 const express = require('express');
+
 const cors = require('cors');
+const morgan = require('morgan');
 
 const dotenv = require('dotenv');
 dotenv.config();
 const { apiRouter } = require('./routes/router');
 
 const { PORT, _PORT } = process.env;
+
+morgan(function (tokens, req, res) {
+   return [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'),
+      '-',
+      tokens['response-time'](req, res),
+      'ms',
+   ].join(' ');
+});
 
 module.exports = class Server {
    constructor() {
@@ -24,12 +38,13 @@ module.exports = class Server {
    }
    // стартовые настройки для всех URI
    initMiddlewares() {
+      this.server.use(morgan('combined'));
       this.server.use(express.json());
       this.server.use(cors({ origin: `http://localhost:${PORT || _PORT}` }));
    }
    // инициализируем   роутера
    initRoutes() {
-      this.server.use('/api', apiRouter); //to do
+      this.server.use('/api', apiRouter);
    }
    //запускаем сервер
    serverListening() {
