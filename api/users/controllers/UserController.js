@@ -160,7 +160,7 @@ class UserController {
    }
 }
 
-// создаём класс для вывода ошибок и скрытия stackTheist error   в консоли  и браузере
+// создаём класс для вывода ошибок и скрытия stackTheist error   в терминал консоль и браузере
 //  и  теперь не требуется делать проверку на // if (targetUserIndex === undefined) return;
 class NotFoundError extends Error {
    constructor(message) {

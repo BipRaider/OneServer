@@ -3,10 +3,7 @@ const cors = require('cors');
 
 const dotenv = require('dotenv');
 dotenv.config();
-
-const { userRouter } = require('./users/routes/users.router');
-
-const { weatherRouter } = require('./weather/routes/weather.router');
+const { apiRouter } = require('./routes/router');
 
 const { PORT, _PORT } = process.env;
 
@@ -14,26 +11,27 @@ module.exports = class Server {
    constructor() {
       this.server = null;
    }
-
+   // стар всех функций при запуске класса new Server().start
    start() {
       this.initServer();
       this.initMiddlewares();
       this.initRoutes();
       this.serverListening();
    }
-
+   //объявляем сервер
    initServer() {
       this.server = express();
    }
+   // стартовые настройки для всех URI
    initMiddlewares() {
       this.server.use(express.json());
       this.server.use(cors({ origin: `http://localhost:${PORT || _PORT}` }));
    }
+   // инициализируем   роутера
    initRoutes() {
-      this.server.use('/users', userRouter);
-      this.server.use('/weather', weatherRouter);
+      this.server.use('/api', apiRouter); //to do
    }
-
+   //запускаем сервер
    serverListening() {
       this.server.listen(PORT || _PORT, () => {
          console.log('Server started listening on port...', PORT || _PORT);

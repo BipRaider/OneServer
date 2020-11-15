@@ -7,6 +7,12 @@ const weatherList = [
       text: 'read weather',
       middleware: [WeatherController.validationWeatherQuery, WeatherController.getWeather],
    },
+   {
+      app: 'post',
+      urn: '/',
+      text: 'read weather',
+      middleware: [WeatherController.validationWeatherQuery],
+   },
 ];
 
 module.exports = weatherList;
