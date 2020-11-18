@@ -6,23 +6,12 @@ class ApiController {
    async _getApi(req, res, next) {
       try {
          return await res.send({
-            query: {
-               users: {
-                  get: '/users',
-                  post: '/users',
-                  patch: '/users/:id',
-                  delete: '/users/:id',
-               },
-               contacts: {
-                  get: '/contacts',
-                  get: '/contacts/:contactId',
-                  post: '/contacts',
-                  patch: '/contacts/:contactId',
-                  delete: '/contacts/:contactId',
-               },
-               weather: {
-                  get: `/weather?lon=''&lat=''`,
-               },
+            contacts: {
+               get: '/contacts',
+               get: '/contacts/:contactId',
+               post: '/contacts',
+               patch: '/contacts/:contactId',
+               delete: '/contacts/:contactId',
             },
          });
       } catch (error) {

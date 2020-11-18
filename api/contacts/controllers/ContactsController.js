@@ -3,9 +3,13 @@ const fs = require('fs');
 const { promises: fsPromises } = require('fs');
 const Joi = require('joi');
 // собираем путь до файла json
-const pathToAsync = path.join(process.cwd(), '/api/contacts/db/contacts.json');
-// читаем файл
-const contacts = JSON.parse(fs.readFileSync(pathToAsync).toString());
+// const pathToAsync = path.join(process.cwd(), '/api/contacts/db/contacts.json');
+// // читаем файл
+// const contacts = JSON.parse(fs.readFileSync(pathToAsync).toString());
+
+const PATH_DB = path.join(process.cwd(), '/api/contacts/db/contacts.json');
+
+// const PATH_DB = '/api/contacts/db/contacts.json';
 
 class ContactsController {
    get getContactId() {
@@ -20,11 +24,15 @@ class ContactsController {
    get deleteContact() {
       return this._deleteContact.bind(this);
    }
+   get getContact() {
+      return this._getContact.bind(this);
+   }
 
    //GET /api/contacts
-   async getContact(req, res, next) {
+   async _getContact(req, res, next) {
       try {
-         return await res.json(contacts);
+         const contacts_db = await this.dbJson(PATH_DB);
+         return await res.json(contacts_db);
       } catch (error) {
          next(error);
       }
@@ -33,8 +41,9 @@ class ContactsController {
    //GET /api/contacts/:contactId
    async _getContactId(req, res, next) {
       try {
+         const contacts_db = await this.dbJson(PATH_DB);
          const targetContactIndex = await this.getByID(res, req.params.contactId);
-         return await res.status(200).json(contacts[targetContactIndex]);
+         return await res.status(200).json(contacts_db[targetContactIndex]);
       } catch (error) {
          next(error);
       }
@@ -42,12 +51,16 @@ class ContactsController {
    //POST /api/contacts
    async _createContact(req, res, next) {
       try {
+         const contacts_db = await this.dbJson(PATH_DB);
+
          const newContact = await {
             ...req.body,
-            id: contacts.length + 1,
+            id: contacts_db.length + 1,
          };
-         await contacts.push(newContact);
-         await this.writeInDB();
+
+         await contacts_db.push(newContact);
+         await this.writeInDB(contacts_db);
+
          return await res.status(201).json(newContact);
       } catch (error) {
          next(error);
@@ -57,18 +70,18 @@ class ContactsController {
    //PATCH /api/contacts/:contactId to do
    async _updateContact(req, res, next) {
       try {
-         console.dir(req.params);
-         console.log(req.body);
+         const contacts_db = await this.dbJson(PATH_DB);
+
          const targetContactIndex = await this.getByID(res, req.params.contactId);
 
-         contacts[targetContactIndex] = {
-            ...contacts[targetContactIndex],
+         contacts_db[targetContactIndex] = {
+            ...contacts_db[targetContactIndex],
             ...req.body,
          };
 
-         await this.writeInDB();
+         await this.writeInDB(contacts_db);
 
-         return await res.status(200).json(contacts[targetContactIndex]);
+         return await res.status(200).json(contacts_db[targetContactIndex]);
       } catch (error) {
          next(error);
       }
@@ -77,40 +90,62 @@ class ContactsController {
    //DELETE /api/contacts/:contactId
    async _deleteContact(req, res, next) {
       try {
+         const contacts_db = await this.dbJson(PATH_DB);
          const targetContactIndex = await this.getByID(res, req.params.contactId);
-         await contacts.splice(targetContactIndex, 1);
-         await this.writeInDB();
+         await contacts_db.splice(targetContactIndex, 1);
+         await this.writeInDB(contacts_db);
          return await res.status(200).json({ message: 'contact deleted' });
       } catch (error) {
          next(error);
       }
    }
 
-   getByID(res, contactID) {
-      const id = parseInt(contactID);
-      const targetContactIndex = contacts.findIndex(contact => contact.id === id);
-      if (targetContactIndex === -1) {
-         res.json({ message: 'Not found' });
-         throw new NotFoundError('Not found');
+   async getByID(res, contactID) {
+      try {
+         const contacts_db = await this.dbJson(PATH_DB);
+         const id = await parseInt(contactID);
+         const targetContactIndex = await contacts_db.findIndex(contact => contact.id === id);
+
+         if (targetContactIndex === -1) {
+            res.json({ message: 'Not found' });
+            throw new NotFoundError('Not found');
+         }
+         return await targetContactIndex;
+      } catch (error) {
+         throw error;
       }
-      return targetContactIndex;
    }
 
-   writeInDB() {
-      const add = JSON.stringify(contacts, null, 1);
-      fsPromises.writeFile(pathToAsync, add);
+   async writeInDB(writeDB) {
+      try {
+         const add = JSON.stringify(writeDB, null, 1);
+         fsPromises.writeFile(PATH_DB, add);
+      } catch (error) {
+         throw error;
+      }
+   }
+
+   async dbJson() {
+      try {
+         const listContact = await fsPromises.readFile(PATH_DB);
+         const listContactString = await listContact.toString();
+         return await JSON.parse(listContactString);
+      } catch (error) {
+         throw error;
+      }
    }
 
    validateIdQuery(req, res, next) {
       res.status(400).json({ message: 'missing fields' });
+      throw new NotFoundError({ message: 'missing fields' });
       next();
    }
 
    validatePostContact(req, res, next) {
       const ContactTemple = Joi.object({
-         name: Joi.string().required(),
-         email: Joi.string().required(),
-         phone: Joi.string().required(),
+         name: Joi.string().min(3).required(),
+         email: Joi.string().min(3).required(),
+         phone: Joi.string().min(9).required(),
       });
       const validated = ContactTemple.validate(req.body);
 
@@ -118,23 +153,26 @@ class ContactsController {
          res.status(404).send({
             message: `missing {'${validated.error.details[0].context.label}': ''} is required name field `,
          });
-         return;
+         throw new NotFoundError(
+            `missing {'${validated.error.details[0].context.label}': ''} is required name field `,
+         );
       }
       next();
    }
 
    validateUpdateContact(req, res, next) {
       const updateContactRules = Joi.object({
-         name: Joi.string(),
-         email: Joi.string(),
-         phone: Joi.string(),
+         name: Joi.string().min(3),
+         email: Joi.string().min(3),
+         phone: Joi.string().min(9),
       });
-
       const validated = updateContactRules.validate(req.body);
 
       if (validated.error) {
-         res.status(400).send(validated.error);
-         return;
+         res.status(400).send({
+            message: validated.error.details[0].message,
+         });
+         throw new NotFoundError(validated.error.details[0].message);
       }
       next();
    }
