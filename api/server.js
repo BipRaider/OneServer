@@ -1,7 +1,8 @@
 const express = require('express');
-
 const cors = require('cors');
 const morgan = require('morgan');
+
+const { db } = require('./db');
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -15,6 +16,7 @@ module.exports = class Server {
    }
    // стар всех функций при запуске класса new Server().start
    start() {
+      this.initDB();
       this.initServer();
       this.initMiddlewares();
       this.initRoutes();
@@ -23,6 +25,9 @@ module.exports = class Server {
    //объявляем сервер
    initServer() {
       this.server = express();
+   }
+   initDB() {
+      this.db = db();
    }
    // стартовые настройки для всех URI
    initMiddlewares() {
