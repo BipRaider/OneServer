@@ -31,7 +31,7 @@
     "prettier": "^2.1.2"
   },
   "scripts": {
-    "start": "node api/start.js",
+    "start": "node ./index.js",
     "start:dev": "nodemon --inspect ./index.js run localhost 3000",
     "dev": "nodemon --inspect api/start.js run localhost 3000",
     "lint": "eslint ./api/*",
