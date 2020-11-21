@@ -1,4 +1,3 @@
-//node  api/db/index.js
 const mongodb = require('mongodb');
 const { MongoClient, ObjectID } = mongodb;
 
