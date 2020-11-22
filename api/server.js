@@ -12,14 +12,13 @@ const { PORT, _PORT, MONGODB_URL } = process.env;
 module.exports = class Server {
    constructor() {
       this.server = null;
-      this.db = null;
    }
    // стар всех функций при запуске класса new Server().start
    async start() {
-      await this.initDatabase();
       this.initServer();
       this.initMiddlewares();
       this.initRoutes();
+      await this.initDatabase();
       this.serverListening();
    }
    //объявляем сервер
