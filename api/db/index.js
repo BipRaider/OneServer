@@ -79,7 +79,7 @@ async function updateContact(contactID, newDate) {
          { $set: newDate },
       );
 
-      if (updateID.modifiedCount === 0) {
+      if (updateID.matchedCount === 0) {
          throw new Error('Not found');
       }
 
