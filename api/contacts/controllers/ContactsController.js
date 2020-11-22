@@ -57,8 +57,8 @@ class ContactsController {
    async _updateContact(req, res, next) {
       try {
          const newContact = await updateContact(req.params.contactId, req.body);
-
-         return await res.status(200).json(newContact);
+         console.dir(newContact);
+         return await res.status(200).json({ message: 'Contact update' });
       } catch (error) {
          res.status(404).send({ message: 'Not found' });
          next(error);
