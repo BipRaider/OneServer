@@ -45,8 +45,9 @@ class ContactsController {
    //POST /api/contacts
    async _createContact(req, res, next) {
       try {
-         await addContact(req.body);
-         return await res.status(201).json(req.body);
+         const newContact = await addContact(req.body);
+         console.dir(newContact);
+         return await res.status(201).json(newContact);
       } catch (error) {
          res.status(500).send({ message: 'Failed to create' });
          next(error);

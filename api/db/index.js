@@ -35,7 +35,7 @@ async function getCollection({ db, CONTACTS }) {
 async function addContact(contact) {
    try {
       const newContact = await collectionDB.insert(contact);
-      return newContact;
+      return newContact.ops[0];
    } catch (error) {}
 }
 
