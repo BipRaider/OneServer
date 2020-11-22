@@ -48,7 +48,7 @@ class ContactsController {
          await addContact(req.body);
          return await res.status(201).json(req.body);
       } catch (error) {
-         res.status(500);
+         res.status(500).send({ message: 'Failed to create' });
          next(error);
       }
    }
@@ -56,8 +56,7 @@ class ContactsController {
    //PATCH /api/contacts/:contactId to do
    async _updateContact(req, res, next) {
       try {
-         const newContact = await updateContact(req.params.contactId, req.body);
-         console.dir(newContact);
+         await updateContact(req.params.contactId, req.body);
          return await res.status(200).json({ message: 'Contact update' });
       } catch (error) {
          res.status(404).send({ message: 'Not found' });
