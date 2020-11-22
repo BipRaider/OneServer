@@ -13,7 +13,7 @@ listRouters.map(({ urn, router }) => {
 
 apiRouter.use((err, req, res, next) => {
    console.dir(err);
-   throw new NotFoundError('Something went wrong....');
+   return res.status(404).send('404');
 });
 
 class NotFoundError extends Error {

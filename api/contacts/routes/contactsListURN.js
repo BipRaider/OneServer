@@ -9,7 +9,7 @@ const contactsList = [
    {
       app: 'get',
       urn: '/:contactId',
-      middleware: [ContactsController.getContactId],
+      middleware: [ContactsController.validateIdQuery, ContactsController.getContactId],
    },
 
    {
@@ -20,22 +20,16 @@ const contactsList = [
    {
       app: 'patch',
       urn: '/:contactId',
-      middleware: [ContactsController.validateUpdateContact, ContactsController.updateContact],
-   },
-   {
-      app: 'patch',
-      urn: '/',
-      middleware: [ContactsController.validateIdQuery],
+      middleware: [
+         ContactsController.validateIdQuery,
+         ContactsController.validateUpdateContact,
+         ContactsController.updateContact,
+      ],
    },
    {
       app: 'delete',
       urn: '/:contactId',
-      middleware: [ContactsController.deleteContact],
-   },
-   {
-      app: 'delete',
-      urn: '/',
-      middleware: [ContactsController.validateIdQuery],
+      middleware: [ContactsController.validateIdQuery, ContactsController.deleteContact],
    },
 ];
 

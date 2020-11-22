@@ -1,22 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-
-const { db } = require('./db');
+const { connectDB } = require('./contacts/models');
 
 const dotenv = require('dotenv');
 dotenv.config();
 const { apiRouter } = require('./routes/router');
 
-const { PORT, _PORT } = process.env;
+const { PORT, _PORT, MONGODB_URL } = process.env;
 
 module.exports = class Server {
    constructor() {
       this.server = null;
+      this.db = null;
    }
    // стар всех функций при запуске класса new Server().start
-   start() {
-      this.initDB();
+   async start() {
+      await this.initDatabase();
       this.initServer();
       this.initMiddlewares();
       this.initRoutes();
@@ -26,8 +26,9 @@ module.exports = class Server {
    initServer() {
       this.server = express();
    }
-   initDB() {
-      this.db = db();
+
+   async initDatabase() {
+      await connectDB({ MONGODB_URL });
    }
    // стартовые настройки для всех URI
    initMiddlewares() {
