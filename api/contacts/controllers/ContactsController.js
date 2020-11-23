@@ -1,7 +1,11 @@
 const {
    Types: { ObjectId },
 } = require('mongoose');
+const bcrypt = require('bcryptjs');
 const Joi = require('joi');
+
+const { hashPassword, getHashPassword } = require('../hash/hash');
+
 const { contactModule } = require('../models/contactSchema');
 const { getContacts, getContact, deleteContact, updateContact } = require('../models/index');
 const { array } = require('joi');
@@ -36,6 +40,7 @@ class ContactsController {
    //GET /api/contacts/:contactId
    async _getContactId(req, res, next) {
       try {
+         const getPass = getHashPassword();
          const contactFromDb = await getContact(req.params.contactId);
          return await res.status(200).json(contactFromDb);
       } catch (error) {
@@ -46,8 +51,18 @@ class ContactsController {
    //POST /api/contacts
    async _createContact(req, res, next) {
       try {
-         const newContact = await contactModule.create(req.body);
-         return await res.status(201).json(newContact);
+         const { password } = req.body;
+         const hashPass = await hashPassword(password);
+         const returnPassHash = await getHashPassword(password, hashPass);
+         console.dir(returnPassHash);
+         const newContact = await contactModule.create({ ...req.body, password: hashPass });
+         const returnContact = await {
+            name: newContact._doc.name,
+            email: newContact._doc.email,
+            phone: newContact._doc.phone,
+         };
+
+         return await res.status(201).json(returnContact);
       } catch (error) {
          res.status(500).send({ message: 'Failed to create' });
          next(error);
