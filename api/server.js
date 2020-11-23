@@ -16,10 +16,10 @@ module.exports = class Server {
    }
    // стар всех функций при запуске класса new Server().start
    async start() {
-      await this.initDatabase();
       this.initServer();
       this.initMiddlewares();
       this.initRoutes();
+      await this.initDatabase();
       this.serverListening();
    }
    //объявляем сервер
