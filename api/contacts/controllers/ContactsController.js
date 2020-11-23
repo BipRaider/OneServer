@@ -4,7 +4,7 @@ const {
 const bcrypt = require('bcryptjs');
 const Joi = require('joi');
 
-const { hashPassword, getHashPassword } = require('../hash/hash');
+const { hashPassword } = require('../../hash/hash');
 
 const { contactModule } = require('../models/contactSchema');
 const { getContacts, getContact, deleteContact, updateContact } = require('../models/index');
@@ -40,7 +40,6 @@ class ContactsController {
    //GET /api/contacts/:contactId
    async _getContactId(req, res, next) {
       try {
-         const getPass = getHashPassword();
          const contactFromDb = await getContact(req.params.contactId);
          return await res.status(200).json(contactFromDb);
       } catch (error) {
@@ -53,8 +52,7 @@ class ContactsController {
       try {
          const { password } = req.body;
          const hashPass = await hashPassword(password);
-         const returnPassHash = await getHashPassword(password, hashPass);
-         console.dir(returnPassHash);
+
          const newContact = await contactModule.create({ ...req.body, password: hashPass });
          const returnContact = await {
             name: newContact._doc.name,

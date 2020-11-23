@@ -19,7 +19,7 @@ async function hashDate(params) {
    const hashParams = (await params) + SALT;
    return hashParams;
 }
-
+//const returnPassHash = await getHashPassword(password, hashPass);
 async function getHashPassword(pass, hashPass) {
    try {
       return await bcrypt.compare(pass, hashPass);
