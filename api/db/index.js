@@ -1,18 +1,7 @@
 const mongodb = require('mongodb');
 const { MongoClient, ObjectID } = mongodb;
 
-const { MONGODB_URL, DB_NAME, CONTACTS } = require('./config');
-
 let collectionDB;
-
-async function db() {
-   try {
-      const db = await connectDB({ MONGODB_URL, DB_NAME });
-      collectionDB = await getCollection({ db, CONTACTS });
-   } catch (error) {
-      throw error;
-   }
-}
 
 async function connectDB({ MONGODB_URL, DB_NAME }) {
    try {
@@ -21,14 +10,6 @@ async function connectDB({ MONGODB_URL, DB_NAME }) {
       return await client.db(DB_NAME);
    } catch (error) {
       throw new Error('Error connected to db...');
-   }
-}
-
-async function getCollection({ db, CONTACTS }) {
-   try {
-      return await db.collection(CONTACTS);
-   } catch (error) {
-      throw error;
    }
 }
 
@@ -97,7 +78,7 @@ function validId(contactID) {
 }
 
 module.exports = {
-   db,
+   connectDB,
    addContact,
    getContact,
    getContacts,

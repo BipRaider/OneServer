@@ -12,7 +12,6 @@ const { PORT, _PORT, MONGODB_URL } = process.env;
 module.exports = class Server {
    constructor() {
       this.server = null;
-      this.db = null;
    }
    // стар всех функций при запуске класса new Server().start
    async start() {
