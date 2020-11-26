@@ -1,15 +1,11 @@
-const mongoose = require('mongoose');
-const {
-   Types: { ObjectId },
-} = require('mongoose');
 const { contactModule } = require('./contactSchema');
-//connectDB - connected to modngo database
-async function connectDB({ MONGODB_URL }) {
+
+async function creatContact(data) {
    try {
-      await mongoose.connect(MONGODB_URL);
-      console.log('Successfully connect to db....');
+      const newContact = await contactModule.create(data);
+      return newContact;
    } catch (error) {
-      throw new Error(' Not successfully connect to db...');
+      throw error;
    }
 }
 
@@ -33,7 +29,6 @@ async function getContact(contactID) {
    }
 }
 
-//to do
 async function deleteContact(contactID) {
    try {
       const deleteID = await contactModule.findByIdAndDelete(contactID);
@@ -48,25 +43,18 @@ async function deleteContact(contactID) {
 
 async function updateContact(contactID, newDate) {
    try {
-      const updateID = await contactModule.findUserByIdAndUpdate(contactID, newDate);
+      const updateID = await contactModule.findContactByIdAndUpdate(contactID, newDate);
       if (!updateID) {
          throw new Error('Not found');
       }
-
       return updateID;
    } catch (error) {
       throw error;
    }
 }
 
-function validId(contactID) {
-   if (!ObjectId.isValid(contactID)) {
-      throw new Error('Not found');
-   }
-}
-
 module.exports = {
-   connectDB,
+   creatContact,
    updateContact,
    deleteContact,
    getContacts,

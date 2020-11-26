@@ -1,10 +1,12 @@
-const {
-   Types: { ObjectId },
-} = require('mongoose');
 const Joi = require('joi');
 
-const { contactModule } = require('../models/contactSchema');
-const { getContacts, getContact, deleteContact, updateContact } = require('../models/index');
+const {
+   creatContact,
+   getContacts,
+   getContact,
+   deleteContact,
+   updateContact,
+} = require('../models/index');
 
 class ContactsController {
    get getContactId() {
@@ -46,7 +48,7 @@ class ContactsController {
    //POST /api/contacts
    async _createContact(req, res, next) {
       try {
-         const newContact = await contactModule.create(req.body);
+         const newContact = await creatContact(req.body);
          return await res.status(201).json(newContact);
       } catch (error) {
          res.status(500).send({ message: 'Failed to create' });
@@ -74,13 +76,6 @@ class ContactsController {
          res.status(404).send({ message: 'Not found' });
          next(error);
       }
-   }
-
-   validateIdQuery(req, res, next) {
-      if (!ObjectId.isValid(req.params.contactId)) {
-         return res.status(400).send({ message: `${'This Id is not found'}` });
-      }
-      next();
    }
 
    validatePostContact(req, res, next) {
@@ -117,7 +112,7 @@ class ContactsController {
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }),
          phone: Joi.string().min(9),
          subscription: Joi.string().min(1),
-         password: Joi.string().min(1),
+         password: Joi.string().min(),
          token: Joi.string().min(1),
       });
       const validated = updateContactRules.validate(req.body);

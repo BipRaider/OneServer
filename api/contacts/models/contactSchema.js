@@ -17,9 +17,9 @@ const contactSchema = new Schema({
    password: { type: String },
    token: { type: String },
 });
-contactSchema.statics.findUserByIdAndUpdate = findUserByIdAndUpdate;
+contactSchema.statics.findContactByIdAndUpdate = findContactByIdAndUpdate;
 
-async function findUserByIdAndUpdate(contactID, params) {
+async function findContactByIdAndUpdate(contactID, params) {
    return await this.findByIdAndUpdate(contactID, { $set: params }, { new: true });
 }
 
