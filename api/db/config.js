@@ -1,5 +1,4 @@
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
 
 const { MONGODB_URL } = process.env;
 const CONTACTS = 'contacts';

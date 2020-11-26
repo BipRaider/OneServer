@@ -43,7 +43,9 @@ npm i esm   https://www.npmjs.com/package/esm
 npm install body-parser   --http://expressjs.com/en/resources/middleware/body-parser.html
 
 npm i cors https://www.npmjs.com/package/cors
-
+//-----------------------Cloud-------------------
+https://console.cloud.google.com/
+npm i @google-cloud/storage  https://www.npmjs.com/package/@google-cloud/storage   
 
 //----------------------- REST
 https://restfulapi.net/

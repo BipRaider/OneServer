@@ -42,7 +42,7 @@ async function addContact(contact) {
 async function getContact(contactID) {
    try {
       await validId(contactID);
-      const foundID = await collectionDB.findOne({ _id: ObjectID(contactID) });
+      const foundID = await collectionDB.findOne({ _id: contactID });
       if (!foundID) {
          throw new Error('not found');
       }
@@ -61,7 +61,7 @@ async function getContacts() {
 async function deleteContact(contactID) {
    try {
       await validId(contactID);
-      const deleteID = await collectionDB.deleteOne({ _id: ObjectID(contactID) });
+      const deleteID = await collectionDB.deleteOne({ _id: contactID });
       if (!deleteID.deletedCount) {
          throw new Error('Not found');
       }
@@ -74,16 +74,17 @@ async function updateContact(contactID, newDate) {
    try {
       await validId(contactID);
 
-      const updateID = await collectionDB.updateOne(
-         { _id: ObjectID(contactID) },
-         { $set: newDate },
+      const updateContact = await collectionDB.updateOne(
+         { _id: contactID },
+         // { $set: newDate },
+         { new: true },
       );
 
-      if (updateID.matchedCount === 0) {
+      if (updateContact.matchedCount === 0) {
          throw new Error('Not found');
       }
 
-      return updateID;
+      return updateContact;
    } catch (error) {
       throw error;
    }

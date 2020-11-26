@@ -2,9 +2,9 @@ const {
    Types: { ObjectId },
 } = require('mongoose');
 const Joi = require('joi');
+
 const { contactModule } = require('../models/contactSchema');
 const { getContacts, getContact, deleteContact, updateContact } = require('../models/index');
-const { array } = require('joi');
 
 class ContactsController {
    get getContactId() {
@@ -86,7 +86,10 @@ class ContactsController {
    validatePostContact(req, res, next) {
       const ContactTemple = Joi.object({
          name: Joi.string().min(3).required(),
-         email: Joi.string().min(3).required(),
+         email: Joi.string()
+            .min(3)
+            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }) // валидация мыла
+            .required(),
          phone: Joi.string().min(9).required(),
          subscription: Joi.string().min(3),
          password: Joi.string().min(3),
@@ -109,8 +112,13 @@ class ContactsController {
    validateUpdateContact(req, res, next) {
       const updateContactRules = Joi.object({
          name: Joi.string().min(3),
-         email: Joi.string().min(3),
+         email: Joi.string()
+            .min(3)
+            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }),
          phone: Joi.string().min(9),
+         subscription: Joi.string().min(1),
+         password: Joi.string().min(1),
+         token: Joi.string().min(1),
       });
       const validated = updateContactRules.validate(req.body);
 

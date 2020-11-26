@@ -3,8 +3,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const { connectDB } = require('./contacts/models');
 
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
+
 const { apiRouter } = require('./routes/router');
 
 const { PORT, _PORT, MONGODB_URL } = process.env;
