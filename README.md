@@ -13,7 +13,8 @@ npm i pug    //https://www.npmjs.com/package/pug  //https://pugjs.org/api/gettin
 npm install ejs https://ejs.co/
 
 //https://mustache.github.io/
-
+//------------------jwt-----------------------
+npm i jsonwebtoken   https://www.npmjs.com/package/jsonwebtoken
 //----------------------------npm i joi
 // проверяет если те данные у нас ,что пришли от клиента  в req.query
 npm i joi   //https://www.npmjs.com/package/joi   //https://joi.dev/api/?v=17.3.0

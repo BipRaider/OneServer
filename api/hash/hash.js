@@ -9,7 +9,7 @@ async function hashPassword(data) {
    try {
       return await bcrypt.hash(data, salt);
    } catch (error) {
-      console.error(new Error('not hash'));
+      console.error(new Error('Not data hash...'));
    }
 }
 
@@ -22,7 +22,7 @@ async function getHashPassword(pass, hashPass) {
    try {
       return await bcrypt.compare(pass, hashPass);
    } catch (error) {
-      console.error(new Error('not data '));
+      console.error(new Error('Password wrong....'));
    }
 }
 

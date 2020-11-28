@@ -1,4 +1,4 @@
-const { contactModule } = require('./contactSchema');
+const { contactModule } = require('../../data/contactSchema');
 const { hashPassword } = require('../../hash/hash');
 
 async function creatContact(data) {

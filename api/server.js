@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const { connectDB } = require('./contacts/models/connectDB');
+const { connectDB } = require('./data/connectDB');
 
 require('dotenv').config();
 
