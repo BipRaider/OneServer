@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { contactModule } = require('../../data/contactSchema');
-const { hashPassword } = require('../../hash/hash');
+const { getHashPassword } = require('../../hash/hash');
 
 async function getEmail(email) {
    try {
@@ -16,7 +16,7 @@ async function getEmail(email) {
 
 async function validPassword(pass, hashPass) {
    try {
-      const isPasswordValid = await hashPassword(pass, hashPass);
+      const isPasswordValid = await getHashPassword(pass, hashPass);
 
       if (!contact) {
          throw new Error('Not contact...');
@@ -29,6 +29,7 @@ async function validPassword(pass, hashPass) {
 
 async function updateContactToken(userID) {
    try {
+      console.dir(userID);
       const token = await jwt.sign({ id: userID }, 'sold_token');
 
       const newToken = await contactModule.updateToken(userID, token);
@@ -42,7 +43,7 @@ async function updateContactToken(userID) {
 }
 
 module.exports = {
-   updateUser,
+   updateContactToken,
    getEmail,
    validPassword,
 };

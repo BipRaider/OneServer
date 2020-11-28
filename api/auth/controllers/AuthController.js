@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken');
-
 const { getEmail, validPassword, updateContactToken } = require('../models/index');
 
 class AuthController {
@@ -15,17 +13,17 @@ class AuthController {
    async _signIn(req, res, next) {
       try {
          const { email, password } = req.body;
-
          const contactFromDb = await getEmail(email);
+         //
          const contactValid = await validPassword(password, contactFromDb.password);
 
-         if (!contactValid) {
+         if (contactValid) {
             return res.status(401).send({ message: 'Authentication failed... ' });
          }
+         //
          const token = await updateContactToken(contactFromDb._id);
-         // const token = await jwt.sign({ id: contactFromDb._id }, 'sold_token');
 
-         return res.status(200).json(token);
+         return res.status(200).json({ token });
       } catch (error) {
          res.status(401).send({ message: 'Authentication failed... ' });
          next(error);

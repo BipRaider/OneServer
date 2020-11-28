@@ -6,6 +6,7 @@ async function creatContact(data) {
       const { password } = data;
       const hashPass = await hashPassword(password);
       const newContact = await contactModule.create({ ...data, password: hashPass });
+
       const returnContact = await {
          name: newContact._doc.name,
          email: newContact._doc.email,

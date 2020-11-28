@@ -16,14 +16,6 @@ apiRouter.use((err, req, res, next) => {
    return res.status(404).send('404');
 });
 
-class NotFoundError extends Error {
-   constructor(message) {
-      super(message);
-      this.status = 404;
-      delete this.stack;
-   }
-}
-
 module.exports = {
    apiRouter,
 };

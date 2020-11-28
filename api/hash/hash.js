@@ -1,35 +1,35 @@
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
 
-const { SALT } = process.env;
-
-const salt = bcrypt.genSaltSync(SALT.length);
-
 async function hashPassword(data) {
    try {
+      const salt = await bcrypt.genSalt(8);
       return await bcrypt.hash(data, salt);
    } catch (error) {
       console.error(new Error('Not data hash...'));
    }
 }
 
-async function hashDate(params) {
-   const hashParams = (await params) + SALT;
-   return hashParams;
-}
-//const returnPassHash = await getHashPassword(password, hashPass);
 async function getHashPassword(pass, hashPass) {
    try {
-      return await bcrypt.compare(pass, hashPass);
+      console.log('start getHashPassword');
+
+      const re = bcrypt.getRounds(hashPass);
+      const sald = bcrypt.getSalt(hashPass);
+      console.dir(re);
+      console.dir(sald);
+      const valid = await bcrypt.compare(pass, hashPass);
+      console.dir(valid);
+      if (!valid) {
+         throw new Error('Password wrong....');
+      }
+
+      return valid;
    } catch (error) {
-      console.error(new Error('Password wrong....'));
+      console.log('<<<getHashPassword>>>');
    }
 }
 
-async function getHashDate(params) {
-   const hashParams = (await params) + SALT;
-   return hashParams;
-}
 module.exports = {
    hashPassword,
    getHashPassword,

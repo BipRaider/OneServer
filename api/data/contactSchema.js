@@ -7,11 +7,11 @@ const authConfig = { type: String, required: false };
 
 const contactSchema = new Schema({
    name: { ...defaultConfig },
-   email: { ...defaultConfig },
+   email: { ...defaultConfig, unique: true },
+   password: { ...defaultConfig },
    phone: { ...defaultConfig },
    token: { ...authConfig },
    subscription: { type: String },
-   password: { ...defaultConfig },
 });
 
 contactSchema.statics.findContactByIdAndUpdate = findContactByIdAndUpdate;

@@ -7,9 +7,10 @@ async function validateSingIn(req, res, next) {
             .min(3)
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }) // валидация мыла
             .required(),
-         password: Joi.string().min(3),
+         password: Joi.string().min(9),
       });
       const validated = await userTemple.validate(req.body);
+
       if (validated.error) {
          res.status(404).send({
             message: `missing {'${validated.error.details[0].context.label}': ''} is required  field `,
@@ -18,6 +19,7 @@ async function validateSingIn(req, res, next) {
             `missing {'${validated.error.details[0].context.label}': ''} is required field `,
          );
       }
+
       next();
    } catch (error) {
       next(error);
