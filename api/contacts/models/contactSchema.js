@@ -21,9 +21,9 @@ const contactSchema = new Schema({
    token: { type: String },
 });
 
-contactSchema.statics.findUserByIdAndUpdate = findUserByIdAndUpdate;
+contactSchema.statics.findContactByIdAndUpdate = findContactByIdAndUpdate;
 
-async function findUserByIdAndUpdate(contactID, params) {
+async function findContactByIdAndUpdate(contactID, params) {
    return await this.findByIdAndUpdate(contactID, { $set: params }, { new: true });
 }
 

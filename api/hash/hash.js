@@ -1,7 +1,5 @@
 const bcrypt = require('bcryptjs');
-
-const dotenv = require('dotenv');
-dotenv.config();
+require('dotenv').config();
 
 const { SALT } = process.env;
 

@@ -1,14 +1,11 @@
-const {
-   Types: { ObjectId },
-} = require('mongoose');
-const bcrypt = require('bcryptjs');
 const Joi = require('joi');
-
-const { hashPassword } = require('../../hash/hash');
-
-const { contactModule } = require('../models/contactSchema');
-const { getContacts, getContact, deleteContact, updateContact } = require('../models/index');
-const { array } = require('joi');
+const {
+   creatContact,
+   getContacts,
+   getContact,
+   deleteContact,
+   updateContact,
+} = require('../models/index');
 
 class ContactsController {
    get getContactId() {
@@ -50,17 +47,8 @@ class ContactsController {
    //POST /api/contacts
    async _createContact(req, res, next) {
       try {
-         const { password } = req.body;
-         const hashPass = await hashPassword(password);
-
-         const newContact = await contactModule.create({ ...req.body, password: hashPass });
-         const returnContact = await {
-            name: newContact._doc.name,
-            email: newContact._doc.email,
-            phone: newContact._doc.phone,
-         };
-
-         return await res.status(201).json(returnContact);
+         const newContact = await creatContact(req.body);
+         return await res.status(201).json(newContact);
       } catch (error) {
          res.status(500).send({ message: 'Failed to create' });
          next(error);
@@ -89,17 +77,13 @@ class ContactsController {
       }
    }
 
-   validateIdQuery(req, res, next) {
-      if (!ObjectId.isValid(req.params.contactId)) {
-         return res.status(400).send({ message: `${'This Id is not found'}` });
-      }
-      next();
-   }
-
    validatePostContact(req, res, next) {
       const ContactTemple = Joi.object({
          name: Joi.string().min(3).required(),
-         email: Joi.string().min(3).required(),
+         email: Joi.string()
+            .min(3)
+            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }) // валидация мыла
+            .required(),
          phone: Joi.string().min(9).required(),
          subscription: Joi.string().min(3),
          password: Joi.string().min(3),
@@ -122,8 +106,13 @@ class ContactsController {
    validateUpdateContact(req, res, next) {
       const updateContactRules = Joi.object({
          name: Joi.string().min(3),
-         email: Joi.string().min(3),
+         email: Joi.string()
+            .min(3)
+            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }),
          phone: Joi.string().min(9),
+         subscription: Joi.string().min(1),
+         password: Joi.string().min(),
+         token: Joi.string().min(1),
       });
       const validated = updateContactRules.validate(req.body);
 

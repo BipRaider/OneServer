@@ -1,4 +1,5 @@
 const ContactsController = require('../controllers/ContactsController');
+const { validateIdQuery } = require('../middleware/validateIdQuery');
 //CRUD
 const contactsList = [
    {
@@ -9,7 +10,7 @@ const contactsList = [
    {
       app: 'get',
       urn: '/:contactId',
-      middleware: [ContactsController.validateIdQuery, ContactsController.getContactId],
+      middleware: [validateIdQuery, ContactsController.getContactId],
    },
 
    {
@@ -21,7 +22,7 @@ const contactsList = [
       app: 'patch',
       urn: '/:contactId',
       middleware: [
-         ContactsController.validateIdQuery,
+         validateIdQuery,
          ContactsController.validateUpdateContact,
          ContactsController.updateContact,
       ],
@@ -29,7 +30,7 @@ const contactsList = [
    {
       app: 'delete',
       urn: '/:contactId',
-      middleware: [ContactsController.validateIdQuery, ContactsController.deleteContact],
+      middleware: [validateIdQuery, ContactsController.deleteContact],
    },
 ];
 

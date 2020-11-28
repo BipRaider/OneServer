@@ -1,15 +1,19 @@
-const mongoose = require('mongoose');
-const {
-   Types: { ObjectId },
-} = require('mongoose');
 const { contactModule } = require('./contactSchema');
-//connectDB - connected to modngo database
-async function connectDB({ MONGODB_URL }) {
+const { hashPassword } = require('../../hash/hash');
+
+async function creatContact(data) {
    try {
-      await mongoose.connect(MONGODB_URL);
-      console.log('Successfully connect to db....');
+      const { password } = data;
+      const hashPass = await hashPassword(password);
+      const newContact = await contactModule.create({ ...data, password: hashPass });
+      const returnContact = await {
+         name: newContact._doc.name,
+         email: newContact._doc.email,
+         phone: newContact._doc.phone,
+      };
+      return returnContact;
    } catch (error) {
-      throw new Error(' Not successfully connect to db...');
+      throw error;
    }
 }
 
@@ -33,7 +37,6 @@ async function getContact(contactID) {
    }
 }
 
-//to do
 async function deleteContact(contactID) {
    try {
       const deleteID = await contactModule.findByIdAndDelete(contactID);
@@ -48,25 +51,18 @@ async function deleteContact(contactID) {
 
 async function updateContact(contactID, newDate) {
    try {
-      const updateID = await contactModule.findUserByIdAndUpdate(contactID, newDate);
+      const updateID = await contactModule.findContactByIdAndUpdate(contactID, newDate);
       if (!updateID) {
          throw new Error('Not found');
       }
-
       return updateID;
    } catch (error) {
       throw error;
    }
 }
 
-function validId(contactID) {
-   if (!ObjectId.isValid(contactID)) {
-      throw new Error('Not found');
-   }
-}
-
 module.exports = {
-   connectDB,
+   creatContact,
    updateContact,
    deleteContact,
    getContacts,
