@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { UnauthorizedError } = require('../../helpers/errors.constructor');
 
 async function validateSingIn(req, res, next) {
    try {
@@ -7,7 +8,7 @@ async function validateSingIn(req, res, next) {
             .min(3)
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }) // валидация мыла
             .required(),
-         password: Joi.string().min(9),
+         password: Joi.string().min(3),
       });
       const validated = await userTemple.validate(req.body);
 
@@ -15,22 +16,15 @@ async function validateSingIn(req, res, next) {
          res.status(404).send({
             message: `missing {'${validated.error.details[0].context.label}': ''} is required  field `,
          });
-         throw new NotFoundError(
+         throw new UnauthorizedError(
             `missing {'${validated.error.details[0].context.label}': ''} is required field `,
+            404,
          );
       }
 
       next();
    } catch (error) {
       next(error);
-   }
-}
-
-class NotFoundError extends Error {
-   constructor(message) {
-      super(message);
-      this.status = 404;
-      delete this.stack;
    }
 }
 

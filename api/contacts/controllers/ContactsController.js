@@ -1,4 +1,6 @@
 const Joi = require('joi');
+const _ = require('lodash');
+
 const {
    creatContact,
    getContacts,
@@ -23,12 +25,15 @@ class ContactsController {
    get getContact() {
       return this._getContact.bind(this);
    }
+   get getCurrentContact() {
+      return this._getCurrentContact.bind(this);
+   }
 
    //GET /api/contacts
    async _getContact(req, res, next) {
       try {
          const contacts_db = await getContacts();
-         return await res.json(contacts_db);
+         return await res.json(this.prepareContactsResponse(contacts_db));
       } catch (error) {
          next(error);
       }
@@ -37,17 +42,27 @@ class ContactsController {
    //GET /api/contacts/:contactId
    async _getContactId(req, res, next) {
       try {
-         const contactFromDb = await getContact(req.params.contactId);
-         return await res.status(200).json(contactFromDb);
+         const contact = await getContact(req.params.contactId);
+         return await res.status(200).json(this.prepareContactResponse(contact));
       } catch (error) {
          res.status(404).send({ message: 'Nod found id' });
          next(error);
       }
    }
+
+   //GET /api/contacts/current
+   async _getCurrentContact(req, res, next) {
+      const [userForResponse] = this.prepareContactsResponse([req.user]);
+      return res.status(200).json(userForResponse);
+   }
+
    //POST /api/contacts
    async _createContact(req, res, next) {
       try {
-         const newContact = await creatContact(req.body);
+         const newContact = await creatContact(req.body, res);
+         if (!newContact) {
+            return res.status(409).send({ message: 'Contact do not create' });
+         }
          return await res.status(201).json(newContact);
       } catch (error) {
          res.status(500).send({ message: 'Failed to create' });
@@ -111,7 +126,7 @@ class ContactsController {
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }),
          phone: Joi.string().min(9),
          subscription: Joi.string().min(1),
-         password: Joi.string().min(),
+         password: Joi.string().min(3),
          token: Joi.string().min(1),
       });
       const validated = updateContactRules.validate(req.body);
@@ -123,6 +138,16 @@ class ContactsController {
          throw new NotFoundError(validated.error.details[0].message);
       }
       next();
+   }
+
+   prepareContactsResponse(contacts) {
+      return contacts.map(data => {
+         return this.prepareContactResponse(data);
+      });
+   }
+   prepareContactResponse(contact) {
+      const { name, email, phone, _id } = contact;
+      return { id: _id, name, email, phone };
    }
 }
 

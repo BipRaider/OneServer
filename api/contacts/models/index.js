@@ -1,12 +1,16 @@
 const { contactModule } = require('../../data/contactSchema');
 const { hashPassword } = require('../../hash/hash');
 
-async function creatContact(data) {
+async function creatContact(data, res) {
    try {
-      const { password } = data;
+      const { email, password } = data;
+      const validContact = await contactModule.findContactByEmail(email);
+      if (validContact) {
+         return false;
+      }
+
       const hashPass = await hashPassword(password);
       const newContact = await contactModule.create({ ...data, password: hashPass });
-
       const returnContact = await {
          name: newContact._doc.name,
          email: newContact._doc.email,

@@ -1,6 +1,8 @@
 const AuthController = require('../controllers/AuthController');
 const { validateSingIn } = require('../middleware/validateSingIn');
-const { validateSingOut } = require('../middleware/validateSingOut');
+const { validateIdQuery } = require('../../middleware/validateIdQuery');
+const { authorize } = require('../../middleware/authorize');
+
 //CRUD
 const authList = [
    {
@@ -8,15 +10,16 @@ const authList = [
       urn: '/sign-in',
       middleware: [validateSingIn, AuthController.signIn],
    },
-   // {
-   //    app: 'patch',
-   //    urn: '/:userId',
-   //    middleware: [
-   //       validateIdQuery,
-   //       AuthController.validateUpdateContact,
-   //       AuthController.updateContact,
-   //    ],
-   // },
+   {
+      app: 'patch',
+      urn: '/:contactId/logout',
+      middleware: [validateIdQuery, authorize, AuthController.logout],
+   },
+   {
+      app: 'get',
+      urn: '/current',
+      middleware: [authorize, AuthController.getCurrentContact],
+   },
 ];
 
 module.exports = authList;

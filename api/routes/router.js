@@ -12,8 +12,7 @@ listRouters.map(({ urn, router }) => {
 });
 
 apiRouter.use((err, req, res, next) => {
-   console.dir(err);
-   return res.status(404).send('404');
+   return res.status(err.status).send({ message: err.message });
 });
 
 module.exports = {

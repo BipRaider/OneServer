@@ -1,11 +1,17 @@
 const ContactsController = require('../controllers/ContactsController');
-const { validateIdQuery } = require('../middleware/validateIdQuery');
+const { validateIdQuery } = require('../../middleware/validateIdQuery');
+const { authorize } = require('../../middleware/authorize');
 //CRUD
 const contactsList = [
    {
       app: 'get',
       urn: '/',
       middleware: [ContactsController.getContact],
+   },
+   {
+      app: 'get',
+      urn: '/current',
+      middleware: [authorize, ContactsController.getCurrentContact],
    },
    {
       app: 'get',
