@@ -1,64 +1,71 @@
-const { getEmail, validPassword } = require('../models/index');
-const { updateContactToken } = require('../../token/index');
+const { getEmail, validPassword, createNewUser } = require('../models/index');
+const { updateUserToken } = require('../../token/index');
 
 class AuthController {
+   get createUser() {
+      return this._createUser.bind(this);
+   }
    get signIn() {
       return this._signIn.bind(this);
    }
-
    get logout() {
       return this._logout.bind(this);
    }
-
-   get getCurrentContact() {
-      return this._getCurrentContact.bind(this);
+   get getCurrentUser() {
+      return this._getCurrentUser.bind(this);
    }
-   //PUT /api/sign-in
+
+   //POST /auth/contacts
+   async _createUser(req, res, next) {
+      try {
+         const newUser = await createNewUser(req.body);
+         return await res.status(201).json(newUser);
+      } catch (error) {
+         next(error);
+      }
+   }
+
+   //PUT /auth/sign-in
    async _signIn(req, res, next) {
       try {
          const { email, password } = req.body;
 
-         const contactFromDb = await getEmail(email);
+         const userFromDb = await getEmail(email);
 
-         await validPassword(password, contactFromDb);
+         await validPassword(password, userFromDb);
 
-         const token = await updateContactToken(contactFromDb._id);
+         const token = await updateUserToken(userFromDb._id);
 
-         return res.status(200).json({ token });
+         return res.status(201).json({ token });
       } catch (error) {
          next(error);
       }
    }
 
-   //PATCH /api/:contactId/logout
+   //PATCH /auth/:contactId/logout
    async _logout(req, res, next) {
       try {
          const user = req.user;
-         await updateContactToken(user._id, null);
-         return await res.status(204).send({ message: 'logout contact....' });
+         await updateUserToken(user._id, null);
+         return await res.status(204);
       } catch (error) {
          next(error);
       }
    }
 
-   //GET /api/current
-   async _getCurrentContact(req, res, next) {
+   //GET /auth/current
+   async _getCurrentUser(req, res, next) {
       try {
-         const [userForResponse] = this.prepareContactsResponse([req.user]);
+         const userForResponse = this.prepareUserResponse(req.user);
          return res.status(200).json(userForResponse);
       } catch (error) {
          next(error);
       }
    }
 
-   prepareContactsResponse(contacts) {
-      return contacts.map(data => {
-         return this.prepareContactResponse(data);
-      });
-   }
-   prepareContactResponse(contact) {
-      const { name, email, phone, _id } = contact;
-      return { id: _id, name, email, phone };
+   prepareUserResponse(user) {
+      const { email, subscription } = user;
+      return { email, subscription };
    }
 }
 

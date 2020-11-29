@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const { connectDB } = require('./data/connectDB');
 
 require('dotenv').config();
-
+const { authRouter } = require('./auth/routes/auth.router');
 const { apiRouter } = require('./routes/router');
 
 const { PORT, _PORT, MONGODB_URL } = process.env;
@@ -38,6 +38,7 @@ module.exports = class Server {
    // инициализируем   роутера
    initRoutes() {
       this.server.use('/api', apiRouter);
+      this.server.use('/auth', authRouter);
    }
    //запускаем сервер
    serverListening() {

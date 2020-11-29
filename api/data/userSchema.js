@@ -1,39 +1,37 @@
 const mongoose = require('mongoose');
 const { Schema } = require('mongoose');
-const CONTACTS = 'contact';
+const user = 'user';
 
 const defaultConfig = { type: String, required: true };
 const authConfig = { type: String, required: false };
 const subscriptionConfig = { type: String, enum: ['free', 'pro', 'premium'], default: 'free' };
 
-const contactSchema = new Schema({
+const userSchema = new Schema({
    name: { ...defaultConfig },
    email: { ...defaultConfig, unique: true },
    password: { ...defaultConfig },
-
-   phone: { ...defaultConfig },
 
    token: { ...authConfig },
    subscription: { ...subscriptionConfig },
 });
 
-contactSchema.statics.findContactByIdAndUpdate = findContactByIdAndUpdate;
-contactSchema.statics.findContactByEmail = findContactByEmail;
-contactSchema.statics.updateToken = updateToken;
+userSchema.statics.findUserByIdAndUpdate = findUserByIdAndUpdate;
+userSchema.statics.findUserByEmail = findUserByEmail;
+userSchema.statics.updateToken = updateToken;
 
-async function findContactByIdAndUpdate(contactID, newParams) {
-   return await this.findByIdAndUpdate(contactID, { $set: newParams }, { new: true });
+async function findUserByIdAndUpdate(userID, newParams) {
+   return await this.findByIdAndUpdate(userID, { $set: newParams }, { new: true });
 }
 
-async function findContactByEmail(email) {
+async function findUserByEmail(email) {
    return await this.findOne({ email });
 }
 async function updateToken(id, newToken) {
    return await this.findByIdAndUpdate(id, { token: newToken }, { new: true });
 }
 
-const contactModule = mongoose.model(CONTACTS, contactSchema);
+const userModule = mongoose.model(user, userSchema);
 
 module.exports = {
-   contactModule,
+   userModule,
 };

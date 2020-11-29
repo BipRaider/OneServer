@@ -7,7 +7,7 @@ const listRouters = [
       router: contactsRouter,
    },
    {
-      urn: '/',
+      urn: '/auth',
       router: authRouter,
    },
 ];

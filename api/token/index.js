@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { contactModule } = require('../data/contactSchema');
+const { userModule } = require('../data/userSchema');
 const { JWT_SECRET } = process.env;
 
 async function updateContactToken(userID, value) {
@@ -23,6 +24,23 @@ async function updateContactToken(userID, value) {
    }
 }
 
+async function updateUserToken(userID, value) {
+   try {
+      if (value === null) {
+         return await userModule.updateToken(userID, null);
+      }
+
+      const options = {
+         expiresIn: 2 * 24 * 60 * 60, //two days
+      };
+
+      const token = await jwt.sign({ id: userID }, JWT_SECRET, options);
+      const newToken = await userModule.updateToken(userID, token);
+      return newToken.token;
+   } catch (error) {
+      throw error;
+   }
+}
 async function validToken(token) {
    try {
       const verifyToken = await jwt.verify(token, JWT_SECRET);
@@ -36,6 +54,7 @@ async function validToken(token) {
 }
 
 module.exports = {
+   updateUserToken,
    updateContactToken,
    validToken,
 };

@@ -1,10 +1,16 @@
 const AuthController = require('../controllers/AuthController');
 const { validateSingIn } = require('../middleware/validateSingIn');
+const validateCreateUser = require('../middleware/validateCreateUser');
 const { validateIdQuery } = require('../../middleware/validateIdQuery');
 const { authorize } = require('../../middleware/authorize');
 
 //CRUD
 const authList = [
+   {
+      app: 'post',
+      urn: '/register',
+      middleware: [validateCreateUser, AuthController.createUser],
+   },
    {
       app: 'put',
       urn: '/sign-in',
@@ -18,7 +24,7 @@ const authList = [
    {
       app: 'get',
       urn: '/current',
-      middleware: [authorize, AuthController.getCurrentContact],
+      middleware: [authorize, AuthController.getCurrentUser],
    },
 ];
 
