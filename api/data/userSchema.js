@@ -17,7 +17,7 @@ const userSchema = new Schema({
    token: { ...authConfig },
    subscription: { ...subscriptionConfig },
 
-   favoriteFilmIds: [{ type: ObjectId }], // чтобы можно привязывать id к  данной строке надо использовать  ObjectId
+   favoriteFilmIds: [{ type: ObjectId, ref: 'film' }], // чтобы можно привязывать id к  данной строке надо использовать  ObjectId
 });
 
 userSchema.statics.findUserByIdAndUpdate = findUserByIdAndUpdate;

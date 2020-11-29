@@ -3,6 +3,25 @@ const { UnauthorizedError } = require('../../helpers/errors.constructor');
 const { userModule } = require('../../data/userSchema');
 const filmModule = require('../../data/filmSchema');
 
+async function getFilms(page, list) {
+   try {
+      // -1 значит отсортировать "от большего к меньшему".
+      // для сортировки "от меньшего к большему" необходимо указать 1
+      //limit(2) - Количество результатов поиска, которые необходимо принять при вытягивании записей/документов по поисковому критерию
+      //.skip(3) - количество результатов поиска, которые необходимо отсеять при вытягивании записей/документов по поисковому критерию;
+      //.count(); - показывает количество записей в ДБ
+      const films = await filmModule
+         .find()
+         .sort({ name: 1 })
+         .skip(Number(page) || 1)
+         .limit(Number(list) || 6);
+
+      return films;
+   } catch (error) {
+      throw error;
+   }
+}
+
 async function getFilmById(id) {
    try {
       const foundID = await filmModule.findById(id);
@@ -16,6 +35,7 @@ async function getFilmById(id) {
       throw error;
    }
 }
+
 async function addFilmUser(userId, filmId) {
    try {
       await userModule.findByIdAndUpdate(
@@ -31,13 +51,15 @@ async function addFilmUser(userId, filmId) {
 }
 async function removeFilmUser(userId, filmId) {
    try {
-      await userModule.findByIdAndUpdate(
-         userId,
-         {
-            $pull: { favoriteFilmIds: filmId },
-         },
-         { new: true },
-      );
+      return await userModule
+         .findByIdAndUpdate(
+            userId,
+            {
+               $pull: { favoriteFilmIds: filmId },
+            },
+            { new: true },
+         )
+         .populate('favoriteFilmIds');
    } catch (error) {
       throw error;
    }
@@ -81,4 +103,5 @@ module.exports = {
    addFilmUser,
    removeFilmUser,
    aggregateFilmUser,
+   getFilms,
 };

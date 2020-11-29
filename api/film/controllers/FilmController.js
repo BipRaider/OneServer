@@ -1,11 +1,47 @@
-const { getFilmById, addFilmUser, removeFilmUser, aggregateFilmUser } = require('../models/index');
+const {
+   getFilmById,
+   addFilmUser,
+   removeFilmUser,
+   aggregateFilmUser,
+   getFilms,
+} = require('../models/index');
 
 class FilmController {
+   get getAllFilm() {
+      return this._getAllFilm.bind(this);
+   }
+   get getAllFilms() {
+      return this._getAllFilms.bind(this);
+   }
    get addFilmForUser() {
       return this._addFilmForUser.bind(this);
    }
    get removeFilmForUser() {
       return this._removeFilmForUser.bind(this);
+   }
+
+   //GET /auth/films
+   async _getAllFilms(req, res, next) {
+      try {
+         const { page, list } = await req.body;
+
+         const films = await getFilms(page, list);
+
+         return await res.status(200).json(films);
+      } catch (error) {
+         next(error);
+      }
+   }
+   //GET /auth/films/:id
+   async _getAllFilm(req, res, next) {
+      try {
+         const filmID = req.params.contactId;
+         const film = await getFilmById(filmID);
+
+         return await res.status(200).json(film);
+      } catch (error) {
+         next(error);
+      }
    }
 
    //PUT /auth/films/favorites/:id_film
@@ -30,9 +66,10 @@ class FilmController {
          const filmId = req.params.contactId;
          const userID = req.user._id;
 
-         await removeFilmUser(userID, filmId);
-         const userWithFilm = await aggregateFilmUser(userID);
+         const userWithFilm1 = await removeFilmUser(userID, filmId);
 
+         const userWithFilm = await aggregateFilmUser(userID);
+         //return await res.status(200).send(this.prepareContactResponse(userWithFilm1)); //более дорогая операция и нельзя задавать точные параметры
          return await res.status(200).send(this.prepareContactsResponse(userWithFilm));
       } catch (error) {
          next(error);
