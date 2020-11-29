@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
-const { Schema } = require('mongoose');
+const {
+   Schema,
+   Types: { ObjectId },
+} = require('mongoose');
 const user = 'user';
 
 const defaultConfig = { type: String, required: true };
@@ -13,6 +16,8 @@ const userSchema = new Schema({
 
    token: { ...authConfig },
    subscription: { ...subscriptionConfig },
+
+   favoriteFilmIds: [{ type: ObjectId }], // чтобы можно привязывать id к  данной строке надо использовать  ObjectId
 });
 
 userSchema.statics.findUserByIdAndUpdate = findUserByIdAndUpdate;
@@ -23,11 +28,12 @@ async function findUserByIdAndUpdate(userID, newParams) {
    return await this.findByIdAndUpdate(userID, { $set: newParams }, { new: true });
 }
 
-async function findUserByEmail(email) {
-   return await this.findOne({ email });
-}
 async function updateToken(id, newToken) {
    return await this.findByIdAndUpdate(id, { token: newToken }, { new: true });
+}
+
+async function findUserByEmail(email) {
+   return await this.findOne({ email });
 }
 
 const userModule = mongoose.model(user, userSchema);

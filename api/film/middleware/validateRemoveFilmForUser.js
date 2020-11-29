@@ -1,21 +1,25 @@
 const Joi = require('joi');
 const { UnauthorizedError } = require('../../helpers/errors.constructor');
 
-async function validateSingIn(req, res, next) {
+function validateRemoveFilmForUser(req, res, next) {
    try {
-      const userTemple = await Joi.object({
+      const ContactTemple = Joi.object({
+         name: Joi.string().min(3).required(),
          email: Joi.string()
             .min(3)
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }) // валидация мыла
             .required(),
+         subscription: Joi.string().min(3),
          password: Joi.string().min(3),
+         token: Joi.string(),
       });
-      const validated = await userTemple.validate(req.body);
+
+      const validated = ContactTemple.validate(req.body);
 
       if (validated.error) {
          throw new UnauthorizedError(
-            `missing {'${validated.error.details[0].context.label}': ''} is required field `,
-            401,
+            `missing {'${validated.error.details[0].context.label}': ''} is required name field `,
+            404,
          );
       }
 
@@ -25,4 +29,4 @@ async function validateSingIn(req, res, next) {
    }
 }
 
-module.exports = validateSingIn;
+module.exports = validateRemoveFilmForUser;
