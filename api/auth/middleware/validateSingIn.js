@@ -10,6 +10,7 @@ async function validateSingIn(req, res, next) {
             .required(),
          password: Joi.string().min(3),
       });
+
       const validated = await userTemple.validate(req.body);
 
       if (validated.error) {

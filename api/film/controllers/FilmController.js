@@ -23,7 +23,7 @@ class FilmController {
    //GET /auth/films
    async _getAllFilms(req, res, next) {
       try {
-         const { page, list } = await req.body;
+         const { page, list } = await req.query;
 
          const films = await getFilms(page, list);
 

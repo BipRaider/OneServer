@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const { connectDB } = require('./data/connectDB');
 
 require('dotenv').config();
+
+const { connectDB } = require('./data/connectDB');
 const { authRouter } = require('./auth/routes/auth.router');
 const { apiRouter } = require('./routes/router');
 
@@ -32,6 +33,7 @@ module.exports = class Server {
    // стартовые настройки для всех URI
    initMiddlewares() {
       this.server.use(morgan('combined'));
+      this.server.use(express.urlencoded());
       this.server.use(express.json());
       this.server.use(cors({ origin: `http://localhost:${PORT || _PORT}` }));
    }
