@@ -1,6 +1,6 @@
 const FilmController = require('../controllers/FilmController');
-const authorize = require('../../middleware/authorize');
-const validateIdQuery = require('../../middleware/validateIdQuery');
+const authorize = require('../../../middleware/authorize');
+const validateIdQuery = require('../../../middleware/validateIdQuery');
 
 //CRUD
 const filmList = [

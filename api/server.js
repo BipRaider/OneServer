@@ -5,7 +5,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 const { connectDB } = require('./data/connectDB');
-const { authRouter } = require('./auth/routes/auth.router');
+const { authRouter } = require('./modules/auth/routes/auth.router');
 const { apiRouter } = require('./routes/router');
 
 const { PORT, _PORT, MONGODB_URL } = process.env;

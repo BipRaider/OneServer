@@ -1,5 +1,5 @@
-const { userModule } = require('../../data/userSchema');
-const { getHashPassword, hashPassword } = require('../../hash/hash');
+const { userModule } = require('../../../data/userSchema');
+const { getHashPassword, hashPassword } = require('../../helpers/hash/hash');
 const { UnauthorizedError } = require('../../helpers/errors.constructor');
 
 async function getEmail(email) {

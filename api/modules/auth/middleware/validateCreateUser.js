@@ -1,9 +1,9 @@
 const Joi = require('joi');
 const { UnauthorizedError } = require('../../helpers/errors.constructor');
 
-function validatePostContact(req, res, next) {
+function validateCreateUser(req, res, next) {
    try {
-      const ContactTemple = Joi.object({
+      const userTemple = Joi.object({
          name: Joi.string().min(3).required(),
          email: Joi.string()
             .min(3)
@@ -14,12 +14,12 @@ function validatePostContact(req, res, next) {
          token: Joi.string(),
       });
 
-      const validated = ContactTemple.validate(req.body);
+      const validated = userTemple.validate(req.body);
 
       if (validated.error) {
          throw new UnauthorizedError(
             `missing {'${validated.error.details[0].context.label}': ''} is required name field `,
-            404,
+            400,
          );
       }
 
@@ -29,4 +29,4 @@ function validatePostContact(req, res, next) {
    }
 }
 
-module.exports = validatePostContact;
+module.exports = validateCreateUser;

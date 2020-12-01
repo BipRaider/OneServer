@@ -2,8 +2,8 @@ const multer = require('multer');
 const upload = multer({ dest: 'static' });
 
 const ImageController = require('../controllers/ImageController');
-const authorize = require('../../middleware/authorize');
-const validateIdQuery = require('../../middleware/validateIdQuery');
+const authorize = require('../../../middleware/authorize');
+const validateIdQuery = require('../../../middleware/validateIdQuery');
 
 //CRUD
 const imageList = [

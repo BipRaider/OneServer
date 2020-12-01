@@ -1,7 +1,7 @@
 const { UnauthorizedError } = require('../../helpers/errors.constructor');
 
-const { userModule } = require('../../data/userSchema');
-const filmModule = require('../../data/filmSchema');
+const { userModule } = require('../../../data/userSchema');
+const filmModule = require('../../../data/filmSchema');
 
 async function getFilms(page, list) {
    try {

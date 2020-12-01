@@ -1,7 +1,7 @@
 const { UnauthorizedError } = require('../../helpers/errors.constructor');
 
-const { userModule } = require('../../data/userSchema');
-const ImageModule = require('../../data/imageSchema');
+const { userModule } = require('../../../data/userSchema');
+const ImageModule = require('../../../data/imageSchema');
 
 async function getImages(page, list) {
    try {

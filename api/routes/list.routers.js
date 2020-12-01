@@ -1,7 +1,7 @@
-const { contactsRouter } = require('@contactRouter');
-const { authRouter } = require('@authRouter');
-// const { contactsRouter } = require('../contacts/routes/contacts.router');
-// const { authRouter } = require('../auth/routes/auth.router');
+// const { contactsRouter } = require('@contactRouter');
+// const { authRouter } = require('@authRouter');
+const { contactsRouter } = require('../modules/contacts/routes/contacts.router');
+const { authRouter } = require('../modules/auth/routes/auth.router');
 //CRUD
 const listRouters = [
    {
