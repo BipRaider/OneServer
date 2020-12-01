@@ -13,7 +13,7 @@ const userSchema = new Schema({
    name: { ...defaultConfig },
    email: { ...defaultConfig, unique: true },
    password: { ...defaultConfig },
-
+   avatarURL: { type: String, required: false },
    token: { ...authConfig },
    subscription: { ...subscriptionConfig },
 

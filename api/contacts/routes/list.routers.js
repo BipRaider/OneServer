@@ -1,4 +1,4 @@
-const { filmRouter } = require('../../film/routes/film.router');
+const { filmRouter } = require('../../handlerFilm/routes/film.router');
 //CRUD
 const listRouters = [
    {
