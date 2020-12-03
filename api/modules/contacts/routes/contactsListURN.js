@@ -1,6 +1,6 @@
 const ContactsController = require('../controllers/ContactsController');
-const validateIdQuery = require('../../middleware/validateIdQuery');
-const authorize = require('../../middleware/authorize');
+const validateIdQuery = require('../../../middleware/validateIdQuery');
+const authorize = require('../../../middleware/authorize');
 //CRUD
 const contactsList = [
    {

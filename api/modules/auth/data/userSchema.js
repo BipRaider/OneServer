@@ -38,6 +38,4 @@ async function findUserByEmail(email) {
 
 const userModule = mongoose.model(user, userSchema);
 
-module.exports = {
-   userModule,
-};
+module.exports = userModule;

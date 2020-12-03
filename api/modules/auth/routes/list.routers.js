@@ -1,5 +1,5 @@
-const { filmRouter } = require('../../handlerFilm/routes/film.router');
-const { imageRouter } = require('../../handlerImage/routes/image.router');
+const filmRouter = require('../../handlerFilm/routes/film.router');
+const imageRouter = require('../../handlerImage/routes/image.router');
 //CRUD
 const listRouters = [
    {
@@ -7,7 +7,7 @@ const listRouters = [
       router: filmRouter,
    },
    {
-      urn: '/image',
+      urn: '/images',
       router: imageRouter,
    },
 ];

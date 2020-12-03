@@ -34,6 +34,4 @@ async function updateToken(id, newToken) {
 
 const contactModule = mongoose.model(CONTACTS, contactSchema);
 
-module.exports = {
-   contactModule,
-};
+module.exports = contactModule;

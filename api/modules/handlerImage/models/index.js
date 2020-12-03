@@ -1,11 +1,10 @@
-const { UnauthorizedError } = require('../../helpers/errors.constructor');
-
-const { userModule } = require('../../../data/userSchema');
-const ImageModule = require('../../../data/imageSchema');
+const { UnauthorizedError } = require('@helpers');
+const { userModule, imageModule } = require('@data');
 
 async function getImages(page, list) {
    try {
-      const images = await ImageModule.find()
+      const images = await imageModule
+         .find()
          .sort({ name: 1 })
          .skip(Number(page) || 1)
          .limit(Number(list) || 6);
@@ -18,7 +17,7 @@ async function getImages(page, list) {
 
 async function getImageById(id) {
    try {
-      const foundID = await ImageModule.findById(id);
+      const foundID = await imageModule.findById(id);
 
       if (!foundID) {
          throw new UnauthorizedError('Image does not found ', 404);
@@ -69,7 +68,7 @@ async function aggregateImageUser(userID, nameDB, localName, foreignName) {
          {
             $lookup: {
                // указываем где искать в какой ДБ ,название коллекцию, а не модели!!!!
-               from: nameDB || 'Images',
+               from: nameDB || 'image',
                //поле в коллекции пользователей, которое содержит id любимых фильмов
                //значения должно совпасть с foreignField
                localField: localName || 'favoriteImageIds',
@@ -77,7 +76,7 @@ async function aggregateImageUser(userID, nameDB, localName, foreignName) {
                // коллекции пользователей
                foreignField: foreignName || '_id', //значения должно совпасть с localField
                // как поле с документами фильмов будет называться
-               as: nameDB || 'Images', //в какое поле записывать найденные данные
+               as: nameDB || 'image', //в какое поле записывать найденные данные
 
                //Смотри в from > Смотри в строку localField >foreignField: сравнивай данные из  from  в localField по _id > as: совпадения вернуть в такую строку
             },

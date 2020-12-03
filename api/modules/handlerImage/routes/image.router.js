@@ -1,4 +1,5 @@
 const { Router } = require('express');
+
 const imageList = require('./imageListURN');
 
 const imageRouter = Router();
@@ -12,6 +13,4 @@ imageRouter.use((err, req, res, next) => {
    return res.status(err.status).send({ message: err.message });
 });
 
-module.exports = {
-   imageRouter,
-};
+module.exports = imageRouter;

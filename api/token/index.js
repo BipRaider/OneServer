@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const { contactModule } = require('../modules/data/contactSchema');
-const { userModule } = require('../modules/data/userSchema');
+const { contactModule } = require('@data');
+const { userModule } = require('@data');
 const { JWT_SECRET } = process.env;
 
 async function updateContactToken(userID, value) {

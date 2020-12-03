@@ -1,4 +1,4 @@
-class UnauthorizedError extends Error {
+class ImageError extends Error {
    constructor(message, status) {
       super(message, status);
       this.message = message;
@@ -6,6 +6,4 @@ class UnauthorizedError extends Error {
       delete this.stack;
    }
 }
-module.exports = {
-   UnauthorizedError,
-};
+module.exports = ImageError;

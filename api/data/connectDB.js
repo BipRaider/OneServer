@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.set('debug', true); // -- включит отслеживания действий mongoose
+// mongoose.set('debug', true); // -- включит отслеживания действий mongoose
 
 async function connectDB({ MONGODB_URL }) {
    try {
@@ -11,6 +11,4 @@ async function connectDB({ MONGODB_URL }) {
    }
 }
 
-module.exports = {
-   connectDB,
-};
+module.exports = connectDB;

@@ -1,9 +1,8 @@
+const { authorize, validateIdQuery } = require('@middleware');
+
 const AuthController = require('../controllers/AuthController');
 const validateSingIn = require('../middleware/validateSingIn');
 const validateCreateUser = require('../middleware/validateCreateUser');
-
-const validateIdQuery = require('../../../middleware/validateIdQuery');
-const authorize = require('../../../middleware/authorize');
 
 //CRUD
 const authList = [

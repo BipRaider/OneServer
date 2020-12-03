@@ -1,6 +1,8 @@
 const Joi = require('joi');
 const _ = require('lodash');
 
+const { UnauthorizedError } = require('@helpers');
+
 const {
    creatContact,
    getContacts,
@@ -59,13 +61,10 @@ class ContactsController {
    //POST /api/contacts
    async _createContact(req, res, next) {
       try {
-         const newContact = await creatContact(req.body, res);
-         if (!newContact) {
-            return res.status(409).send({ message: 'Contact do not create' });
-         }
+         const newContact = await creatContact(req.body);
+
          return await res.status(201).json(newContact);
       } catch (error) {
-         res.status(500).send({ message: 'Failed to create' });
          next(error);
       }
    }
@@ -76,7 +75,6 @@ class ContactsController {
          const update = await updateContact(req.params.contactId, req.body);
          return await res.status(200).json(update);
       } catch (error) {
-         res.status(404).send({ message: 'Not found' });
          next(error);
       }
    }
@@ -87,7 +85,6 @@ class ContactsController {
          const delContact = await deleteContact(req.params.contactId);
          return await res.status(204).json(delContact);
       } catch (error) {
-         res.status(404).send({ message: 'Not found' });
          next(error);
       }
    }
@@ -107,11 +104,12 @@ class ContactsController {
       const validated = ContactTemple.validate(req.body);
 
       if (validated.error) {
-         res.status(404).send({
-            message: `missing {'${validated.error.details[0].context.label}': ''} is required name field `,
-         });
-         throw new NotFoundError(
+         // res.status(404).send({
+         //    message: `missing {'${validated.error.details[0].context.label}': ''} is required name field `,
+         // });
+         throw new UnauthorizedError(
             `missing {'${validated.error.details[0].context.label}': ''} is required name field `,
+            404,
          );
       }
 
@@ -132,10 +130,7 @@ class ContactsController {
       const validated = updateContactRules.validate(req.body);
 
       if (validated.error) {
-         res.status(400).send({
-            message: validated.error.details[0].message,
-         });
-         throw new NotFoundError(validated.error.details[0].message);
+         throw new UnauthorizedError(validated.error.details[0].message, 400);
       }
       next();
    }
@@ -148,14 +143,6 @@ class ContactsController {
    prepareContactResponse(contact) {
       const { name, email, phone, _id } = contact;
       return { id: _id, name, email, phone };
-   }
-}
-
-class NotFoundError extends Error {
-   constructor(message) {
-      super(message);
-      this.status = 404;
-      delete this.stack;
    }
 }
 

@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { UnauthorizedError } = require('../../helpers/errors.constructor');
+const { UnauthorizedError } = require('@helpers');
 
 function validateCreateUser(req, res, next) {
    try {

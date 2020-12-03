@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { JWT_SECRET } = process.env;
 
-const { userModule } = require('../modules/data/userSchema');
-const { UnauthorizedError } = require('../helpers/errors.constructor');
+const { userModule } = require('@data');
+const { UnauthorizedError } = require('@helpers');
 
 async function authorize(req, res, next) {
    try {

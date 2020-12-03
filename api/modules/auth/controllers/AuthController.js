@@ -1,5 +1,5 @@
 const { getEmail, validPassword, createNewUser } = require('../models/index');
-const { updateUserToken } = require('../../token/index');
+const { updateUserToken } = require('@token');
 
 class AuthController {
    get createUser() {

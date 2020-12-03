@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { UnauthorizedError } = require('../../helpers/errors.constructor');
+const { UnauthorizedError } = require('@helpers');
 
 async function validateAddFilmForUser(req, res, next) {
    try {

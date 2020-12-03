@@ -1,44 +1,18 @@
 const multer = require('multer');
-const upload = multer({ dest: 'static' });
+const upload = multer({ dest: __dirname + '/static' });
+
+const { authorize, validateIdQuery } = require('@middleware');
 
 const ImageController = require('../controllers/ImageController');
-const authorize = require('../../../middleware/authorize');
-const validateIdQuery = require('../../../middleware/validateIdQuery');
+const handlerMulter = require('../middleware/handlerMulter');
+const initMulter = require('../middleware/initMulter');
 
 //CRUD
 const imageList = [
    {
       app: 'post',
       urn: '/form-data',
-      middleware: [
-         upload.single('avatar'),
-         (req, res, next) => {
-            console.log('post-avatar');
-            res.send('post-avatar');
-         },
-      ],
-   },
-   {
-      app: 'post',
-      urn: '/',
-      middleware: [
-         authorize,
-         (req, res, next) => {
-            console.log('post-image');
-            res.send('post-image');
-         },
-      ],
-   },
-   {
-      app: 'delete',
-      urn: '/',
-      middleware: [
-         authorize,
-         (req, res, next) => {
-            console.log('post-delete');
-            res.send('post-delete');
-         },
-      ],
+      middleware: [upload.single('avatar'), handlerMulter],
    },
 ];
 

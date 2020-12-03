@@ -12,6 +12,4 @@ filmRouter.use((err, req, res, next) => {
    return res.status(err.status).send({ message: err.message });
 });
 
-module.exports = {
-   filmRouter,
-};
+module.exports = filmRouter;
