@@ -1,59 +1,22 @@
-const {
-   getImageById,
-   addImageUser,
-   removeImageUser,
-   aggregateImageUser,
-   getImages,
-} = require('../models/index');
-
 class ImageController {
-   get getAllImage() {
-      return this._getAllImage.bind(this);
+   get getImage() {
+      return this._getImage.bind(this);
    }
-   get getAllImages() {
-      return this._getAllImages.bind(this);
-   }
-   get addImageForUser() {
-      return this._addImageForUser.bind(this);
-   }
-   get removeImageForUser() {
-      return this._removeImageForUser.bind(this);
+   get getAvatar() {
+      return this._getAvatar.bind(this);
    }
 
-   //GET /auth/Images
-   async _getAllImages(req, res, next) {
+   //GET /auth/images/ name images
+   async _getImage(req, res, next) {
       try {
-         return await res.status(200);
-      } catch (error) {
-         next(error);
-      }
-   }
-   //GET /auth/Images/:id
-   async _getAllImage(req, res, next) {
-      try {
-         return await res.status(200);
-      } catch (error) {
-         next(error);
-      }
-   }
+         const { filename } = await req.file;
 
-   //PUT /auth/Images/favorites/:id_Image
-   async _addImageForUser(req, res, next) {
-      try {
-         return await res.status(200);
+         return res.status(200).send(`http://localhost:3000/auth/images/${filename}`);
       } catch (error) {
          next(error);
       }
    }
-
-   //DELETE /auth/Images/favorites/:id_Image
-   async _removeImageForUser(req, res, next) {
-      try {
-         return await res.status(200);
-      } catch (error) {
-         next(error);
-      }
-   }
+   async _getAvatar(req, res, next) {}
 }
 
 module.exports = new ImageController();

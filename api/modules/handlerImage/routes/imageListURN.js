@@ -1,24 +1,19 @@
 const multer = require('multer');
 
+const ImageController = require('../controllers/ImageController');
+
+const handlerImageMin = require('../middleware/handlerImageMin');
 const storage = require('../middleware/initMulter');
 const upload = multer({ storage: storage });
 
-const { authorize, validateIdQuery } = require('@middleware');
-const ImageController = require('../controllers/ImageController');
-const handlerMulter = require('../middleware/handlerMulter');
-const handlerImageMin = require('../middleware/handlerImageMin');
+//http://localhost:3000/auth/images/
 
 //CRUD
 const imageList = [
    {
       app: 'post',
       urn: '/form-data',
-      middleware: [upload.single('avatar'), handlerImageMin, handlerMulter],
-   },
-   {
-      app: 'post',
-      urn: '/form-data',
-      middleware: [handlerMulter],
+      middleware: [upload.single('avatar'), handlerImageMin, ImageController.getImage],
    },
 ];
 

@@ -6,9 +6,8 @@ require('dotenv').config();
 
 const { connectDB } = require('@data');
 const { authRouter } = require('./modules/auth/routes/auth.router');
+const userRouter = require('./modules/users/routes/user.router');
 const { apiRouter } = require('./routes/router');
-
-const handlerMulter = require('./modules/handlerImage/middleware/handlerMulter');
 
 const { PORT, _PORT, MONGODB_URL } = process.env;
 
@@ -43,6 +42,7 @@ module.exports = class Server {
    initRoutes() {
       this.server.use('/api', apiRouter);
       this.server.use('/auth', authRouter);
+      this.server.use('/user', userRouter);
    }
    //запускаем сервер
    serverListening() {

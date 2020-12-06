@@ -1,8 +1,14 @@
+const multer = require('multer');
+
 const { authorize, validateIdQuery } = require('@middleware');
 
 const AuthController = require('../controllers/AuthController');
 const validateSingIn = require('../middleware/validateSingIn');
 const validateCreateUser = require('../middleware/validateCreateUser');
+
+// const handlerImageMin = require('../../handlerImage/middleware/handlerImageMin');
+// const storage = require('../../handlerImage/middleware/initMulter');
+// const upload = multer({ storage: storage });
 
 //CRUD
 const authList = [
