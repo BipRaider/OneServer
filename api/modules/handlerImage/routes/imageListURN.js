@@ -7,6 +7,7 @@ const storage = require('../middleware/initMulter');
 const upload = multer({ storage: storage });
 
 //http://localhost:3000/auth/images/
+//http://localhost:3000/user/images/
 
 //CRUD
 const imageList = [
