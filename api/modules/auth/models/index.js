@@ -35,14 +35,13 @@ async function validPassword(pass, hashPass) {
 
 async function createNewUser(data) {
    try {
-      console.log('data', data);
       const { email, password } = data;
 
       const validUser = await userModule.findUserByEmail(email);
       if (validUser) {
          throw new UnauthorizedError('User do not create', 409);
       }
-      generator.generateRandomAvatar('avatar');
+
       const hashPass = await hashPassword(password);
       const newUser = await userModule.create({
          ...data,

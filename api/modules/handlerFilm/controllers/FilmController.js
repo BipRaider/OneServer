@@ -66,10 +66,10 @@ class FilmController {
          const filmId = req.params.contactId;
          const userID = req.user._id;
 
-         const userWithFilm1 = await removeFilmUser(userID, filmId);
+         await removeFilmUser(userID, filmId);
 
          const userWithFilm = await aggregateFilmUser(userID);
-         //return await res.status(200).send(this.prepareContactResponse(userWithFilm1)); //более дорогая операция и нельзя задавать точные параметры
+         //return await res.status(200).send(this.prepareContactResponse(removeFilmUser)); //более дорогая операция и нельзя задавать точные параметры
          return await res.status(200).send(this.prepareContactsResponse(userWithFilm));
       } catch (error) {
          next(error);
