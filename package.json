@@ -1,10 +1,10 @@
 {
   "name": "my_app",
-  "version": "1.1.1",
+  "version": "1.0.0",
   "description": "a really cool app",
   "main": "index.js",
   "engines": {
-    "node": "v12.18.3"
+    "node": "12.18.3"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.6.0",
