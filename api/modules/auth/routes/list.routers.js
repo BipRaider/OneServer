@@ -3,11 +3,11 @@ const imageRouter = require('../../handlerImage/routes/image.router');
 //CRUD
 const listRouters = [
    {
-      urn: '/films',
+      urn: '/films', //http://localhost:3000/auth/films/
       router: filmRouter,
    },
    {
-      urn: '/images',
+      urn: '/images', //http://localhost:3000/auth/images/
       router: imageRouter,
    },
 ];
