@@ -1,5 +1,3 @@
-const { required } = require('joi');
-
 exports.connectDB = require('./connectDB');
 
 exports.userModule = require('../modules/auth/data/userSchema');

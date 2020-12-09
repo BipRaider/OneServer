@@ -16,6 +16,9 @@ const userSchema = new Schema({
    avatarURL: { type: String, required: false },
    token: { ...authConfig },
    subscription: { ...subscriptionConfig },
+   status: { type: String, required: true, enum: ['Verified', 'Created'], default: 'Created' },
+
+   verificationToken: { type: String, required: false },
 
    favoriteFilmIds: [{ type: ObjectId, ref: 'film' }], // чтобы можно привязывать id к  данной строке надо использовать  ObjectId
 });
@@ -23,6 +26,7 @@ const userSchema = new Schema({
 userSchema.statics.findUserByIdAndUpdate = findUserByIdAndUpdate;
 userSchema.statics.findUserByEmail = findUserByEmail;
 userSchema.statics.updateToken = updateToken;
+userSchema.statics.createVerificationToken = createVerificationToken;
 
 async function findUserByIdAndUpdate(userID, newParams) {
    return await this.findByIdAndUpdate(userID, { $set: newParams }, { new: true });
@@ -34,6 +38,10 @@ async function updateToken(id, newToken) {
 
 async function findUserByEmail(email) {
    return await this.findOne({ email });
+}
+
+async function createVerificationToken(id, newToken) {
+   return await this.findByIdAndUpdate(id, { verificationToken: newToken }, { new: true });
 }
 
 const userModule = mongoose.model(user, userSchema);
