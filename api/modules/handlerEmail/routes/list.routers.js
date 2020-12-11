@@ -1,10 +1,4 @@
-const filmRouter = require('../../handlerFilm/routes/film.router');
 //CRUD
-const listRouters = [
-   {
-      urn: '/films',
-      router: filmRouter,
-   },
-];
+const listRouters = [];
 
 module.exports = listRouters;

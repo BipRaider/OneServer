@@ -3,12 +3,6 @@ require('dotenv').config();
 
 const { MY_PASS_MAIL, MY_MAIL } = process.env;
 
-/**
- * @param  {'gmail'} service
- * @param  {{user:MY_MAIL} auth
- * @param  {MY_PASS_MAIL} pass
-
- */
 // Указываем какой акаунты используем
 const transporter = nodemailer.createTransport({
    service: 'gmail',

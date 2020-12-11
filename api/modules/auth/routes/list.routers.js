@@ -1,5 +1,6 @@
 const filmRouter = require('../../handlerFilm/routes/film.router');
 const imageRouter = require('../../handlerImage/routes/image.router');
+const emailRouter = require('../../handlerEmail/routes/email.router');
 //CRUD
 const listRouters = [
    {
@@ -9,6 +10,10 @@ const listRouters = [
    {
       urn: '/images', //http://localhost:3000/auth/images/
       router: imageRouter,
+   },
+   {
+      urn: '/verify', //http://localhost:3000/auth/verify/:verificationToken
+      router: emailRouter,
    },
 ];
 

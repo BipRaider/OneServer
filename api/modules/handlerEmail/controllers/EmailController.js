@@ -1,31 +1,22 @@
-const nodemailer = require('nodemailer');
-require('dotenv').config();
-
-const { sendMail } = require('../models/index');
+const { verifyEmailToken } = require('../models/index');
 
 class EmailController {
-   get getContactId() {
-      return this._getContactId.bind(this);
-   }
-   //GET /api/contacts
-   async _getContact(req, res, next) {
-      try {
-         const contacts_db = await getContacts();
-         return await res.json(this.prepareContactsResponse(contacts_db));
-      } catch (error) {
-         next(error);
-      }
+   get verifyUser() {
+      return this._verifyUser.bind(this);
    }
 
-   async sendMail(req, res, next) {
+   //GET /api/verify/:verification
+   async _verifyUser(req, res, next) {
       try {
-         await sendMail();
-         return await res.send('send mail ');
+         const { verificationToken } = req.params;
+
+         await verifyEmailToken(verificationToken);
+
+         return res.status(200).json();
       } catch (error) {
          next(error);
       }
    }
-   async sendVerificationEmail(user) {}
 }
 
 module.exports = new EmailController();

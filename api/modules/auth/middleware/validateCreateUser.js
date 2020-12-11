@@ -9,10 +9,7 @@ function validateCreateUser(req, res, next) {
             .min(3)
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'pw'] } }) // валидация мыла
             .required(),
-         avatarURL: Joi.string().min(3),
-         subscription: Joi.string().min(3),
          password: Joi.string().min(3),
-         token: Joi.string(),
       });
 
       const validated = userTemple.validate(req.body);

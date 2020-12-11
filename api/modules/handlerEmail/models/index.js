@@ -1,12 +1,13 @@
+const uuid = require('uuid');
+const nodemailer = require('nodemailer');
+
 require('dotenv').config();
-const { MY_PASS_MAIL, MY_MAIL } = process.env;
+const { MY_PASS_MAIL, MY_MAIL, PORT, _PORT } = process.env;
 
 const { userModule } = require('@data');
-const { UnauthorizedError, hash } = require('@helpers');
-const { hashPassword } = hash;
+const { UnauthorizedError } = require('@helpers');
 
-// Указываем какой акаунты используем
-const transporter = nodemailer.createTransport({
+const transport = nodemailer.createTransport({
    service: 'gmail',
    auth: {
       user: MY_MAIL,
@@ -14,46 +15,40 @@ const transporter = nodemailer.createTransport({
    },
 });
 
-// параметры мыла сообщения
-const mailOptions = {
-   from: MY_MAIL, //  The sender of the email
-   to: ['thebipus@gmail.com', MY_MAIL], // The recipient of the email
-   subject: 'Subject of your email', //  the subject of the email
-   html: '<p>Your html here</p>', //  all the magic happens here
-};
+function mailOptions(email, verifyToken, text) {
+   return {
+      from: MY_MAIL,
+      to: email,
+      subject: 'Email verification',
+      html: `<a href="http://localhost:${PORT || _PORT}/auth/verify/${verifyToken}">${text} </a>`,
+   };
+}
 
-async function updateContact(contactID, newDate) {
+async function verifyEmailToken(token) {
    try {
-      const updateID = await contactModule.findUserByIdAndUpdate(contactID, newDate);
-      if (!updateID) {
-         throw new UnauthorizedError('Not found', 404);
+      const userToken = await userModule.fineByVerificationToken(token);
+      if (!userToken) {
+         throw new UnauthorizedError('User not found', 404);
       }
-      return updateID;
+
+      await userModule.verifyUser(userToken._id);
    } catch (error) {
       throw error;
    }
 }
 
-async function sendMail() {
+async function sendVerificationToken(user) {
    try {
-      transporter.sendMail(mailOptions);
-   } catch (error) {
-      throw error;
-   }
-}
+      const verificationToken = uuid.v4();
+      const updateId = await userModule.createVerificationToken(user._id, verificationToken);
 
-async function sendVerificationEmail(user) {
-   try {
-      const verificationToken = uuid.v5();
-
-      const updateId = await contactModule.createVerificationToken(user._id, verificationToken);
-      if (!updateID) {
-         throw new UnauthorizedError('Not found', 404);
-      }
+      await transport.sendMail(
+         mailOptions(updateId.email, verificationToken, 'Your verification token'),
+      );
 
       return updateId;
    } catch (error) {
       throw error;
    }
 }
-module.exports = { sendMail };
+module.exports = { verifyEmailToken, sendVerificationToken };
